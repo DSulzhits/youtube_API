@@ -11,6 +11,9 @@ def main():
     print(green_grass.channel_videoCount)
     print(green_grass.channel_viewCount)
     # green_grass.channel_id = 'Новое название'
+    green_grass.make_json()
+    vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+    vdud.make_json()
     pass
 
 
