@@ -1,20 +1,23 @@
 import os
-from dotenv import load_dotenv
 import json
 from googleapiclient.discovery import build
 
-load_dotenv()
 
-
-class Channel:
+class Youtube:
     api_key: str = os.getenv('YT_API_KEY')
     youtube = build('youtube', 'v3', developerKey=api_key)
 
+    @classmethod
+    def get_channel(cls, channel_id: str):
+        yt_channel = cls.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
+        return yt_channel
+
+
+class Channel:
+
     def __init__(self, channel_id: str):
         self.__id = channel_id
-        yt_channel = self.youtube.channels().list(id=self.__id, part='snippet,statistics').execute()
-        self.__channel_info = json.dumps(yt_channel, indent=2, ensure_ascii=False)
-        self.__info = json.loads(self.__channel_info)
+        self.__info = Youtube.get_channel(channel_id)
         self.__title = self.__info['items'][0]['snippet']['title']
         self.__description = self.__info['items'][0]['snippet']['description']
         self.__link = 'https://www.youtube.com/' + self.__info['items'][0]['snippet']['customUrl']
@@ -52,11 +55,11 @@ class Channel:
 
     @property
     def channel_info(self) -> str:
-        return self.__channel_info
+        return self.__info
 
-    @channel_id.setter
-    def channel_id(self, name_inp: str) -> None:
-        raise AttributeError("property 'channel_id' of 'Channel' object has no setter")
+    # @channel_id.setter
+    # def channel_id(self, name_inp: str) -> None:
+    #     raise AttributeError("property 'channel_id' of 'Channel' object has no setter")
 
     def make_json(self):
         data = {}
@@ -67,5 +70,5 @@ class Channel:
         data['channel_subscribers'] = self.__subscribers
         data['channel_videoCount'] = self.__videoCount
         data['channel_viewCount'] = self.__viewCount
-        with open(f'channel_info_{self.__title}.json', 'a', encoding='UTF-8') as file:
+        with open(f'channel_info_{self.__title}.json', 'w', encoding='UTF-8') as file:
             json.dump(data, file, indent=2, ensure_ascii=False)
