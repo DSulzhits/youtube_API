@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 
 
 class Youtube:
-    """Создаем класс Youtube как основной для обращения к самому ютубу и получения оотуда необходимых данных о канале"""
+    """Создаем класс Youtube как основной для обращения к самому ютубу и получения оттуда необходимых данных о канале"""
     api_key: str = os.getenv('YT_API_KEY')
     youtube = build('youtube', 'v3', developerKey=api_key)
 
