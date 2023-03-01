@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 
 
 class Youtube:
+    """Создаем класс Youtube как основной для обращения к самому ютубу и получения оотуда необходимых данных о канале"""
     api_key: str = os.getenv('YT_API_KEY')
     youtube = build('youtube', 'v3', developerKey=api_key)
 
@@ -14,8 +15,11 @@ class Youtube:
 
 
 class Channel:
+    """Создаем класс для работы с полученными данными от ютуба"""
 
     def __init__(self, channel_id: str):
+        """Инициализируем для работы с необходимыми данными, сами данные делаем приватными,
+        чтобы пользователь не мог вносить в них изменения"""
         self.__id = channel_id
         self.__info = Youtube.get_channel(channel_id)
         self.__title = self.__info['items'][0]['snippet']['title']
@@ -27,6 +31,8 @@ class Channel:
 
     @property
     def channel_id(self) -> str:
+        """Текущий и последующие декораторы и методы используются
+        для получения нужной информации о канале по запросу пользователя"""
         return self.__id
 
     @property
@@ -58,10 +64,13 @@ class Channel:
         return self.__info
 
     # @channel_id.setter
+    """Сделано для получения ошибки которая бы выглядела как в задании 
+    (честно сказать не знаю насколько это обязательно поэтому закомментил"""
     # def channel_id(self, name_inp: str) -> None:
     #     raise AttributeError("property 'channel_id' of 'Channel' object has no setter")
 
     def make_json(self):
+        """Метод для создания .json файла"""
         data = {}
         data['channel_id'] = self.__id
         data['channel_title'] = self.__title
