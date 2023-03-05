@@ -25,9 +25,9 @@ class Channel:
         self.__title = self.__info['items'][0]['snippet']['title']
         self.__description = self.__info['items'][0]['snippet']['description']
         self.__link = 'https://www.youtube.com/' + self.__info['items'][0]['snippet']['customUrl']
-        self.__subscribers = self.__info['items'][0]['statistics']['subscriberCount']
-        self.__videoCount = self.__info['items'][0]['statistics']['videoCount']
-        self.__viewCount = self.__info['items'][0]['statistics']['viewCount']
+        self.__subscribers = int(self.__info['items'][0]['statistics']['subscriberCount'])
+        self.__videoCount = int(self.__info['items'][0]['statistics']['videoCount'])
+        self.__viewCount = int(self.__info['items'][0]['statistics']['viewCount'])
 
     @property
     def channel_id(self) -> str:
@@ -66,6 +66,7 @@ class Channel:
     # @channel_id.setter
     """Сделано для получения ошибки которая бы выглядела как в задании 
     (честно сказать не знаю насколько это обязательно поэтому закомментил"""
+
     # def channel_id(self, name_inp: str) -> None:
     #     raise AttributeError("property 'channel_id' of 'Channel' object has no setter")
 
@@ -81,3 +82,17 @@ class Channel:
         data['channel_viewCount'] = self.__viewCount
         with open(f'channel_info_{self.__title}.json', 'w', encoding='UTF-8') as file:
             json.dump(data, file, indent=2, ensure_ascii=False)
+
+    def __repr__(self):
+        return f"Channel ({self.__title}, {self.__link})"
+
+    def __str__(self):
+        return f"Youtube-канал: {self.__title}, подписчиков: {self.__subscribers}"
+
+    def __gt__(self, other) -> bool:
+        """Метод для сравнения количества подписчиков"""
+        return self.__subscribers > other.__subscribers
+
+    def __add__(self, other) -> bool:
+        """Метод для сложения количества подписчиков"""
+        return self.__subscribers + other.__subscribers
